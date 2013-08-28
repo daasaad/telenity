@@ -1,5 +1,8 @@
 package fizzbuzzP;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * FizzBuzz w/ Casting, Parameters, Display Interface
@@ -28,19 +31,33 @@ public class FizzBuzzWithDispInterface {
 		return ((i % param) == 0) || strI.contains("param");
 	}
 
-	public void processFizzBuzz(int param1, int param2) {
+	public List<String> processFizzBuzz(int param1, int param2) {
+		List<String> output = new ArrayList<String>();
 		String strI;
+		String fizzbuzz;
 		boolean fizzy = false;
 		
 		while (++i < COUNTLIMIT) {
 			strI = Integer.toString(i);
+			fizzbuzz = "";
 			if (fizzy = makeFizzBuzz(strI, param1))
-				printer.display(FIZZ);
+				fizzbuzz = FIZZ;
 			if (makeFizzBuzz(strI, param2))
-				printer.display(BUZZ);
+				fizzbuzz = fizzbuzz.concat(BUZZ);
 			else if (!fizzy)
-				printer.display(strI);
+				fizzbuzz = strI;
+			output.add(fizzbuzz);
+		}
+		return output;
+	}
+	
+	public void printArray(List<String> array) {
+		final int size=array.size();
+		int i=0;
+		while (i<size){
+			printer.display(array.get(i));
 			printer.displayLine();
+			i++;
 		}
 	}
 
@@ -48,7 +65,8 @@ public class FizzBuzzWithDispInterface {
 		Displayable printer = new PrintScreen();
 		FizzBuzzWithDispInterface example = new FizzBuzzWithDispInterface(
 				printer);
-		example.processFizzBuzz(PARAM1, PARAM2);
+		example.printArray(example.processFizzBuzz(PARAM1, PARAM2));
+
 	}
 
 }
