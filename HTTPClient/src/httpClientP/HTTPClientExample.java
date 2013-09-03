@@ -26,6 +26,7 @@ public class HTTPClientExample {
 			e.printStackTrace();
 		}
 
+		
 		BufferedReader rd = null;
 		try {
 			rd = new BufferedReader(new InputStreamReader(response.getEntity()
