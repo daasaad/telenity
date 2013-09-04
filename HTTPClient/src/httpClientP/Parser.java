@@ -7,10 +7,10 @@ import java.io.InputStreamReader;
 import org.apache.http.HttpResponse;
 
 public class Parser {
-	public String user=null;
-	public String passwd=null;
-	public String msisdn=null;
-	public String text=null;
+	public String user = null;
+	public String passwd = null;
+	public String msisdn = null;
+	public String text = null;
 
 	public String parseLine(String line) {
 		int subIndex = line.indexOf('=');
@@ -32,8 +32,8 @@ public class Parser {
 
 		String line = "";
 		try {
-			while ((line = rd.readLine()) != null)
-				if (line == "<body>") {
+			while ((line = rd.readLine()) != null) {
+				if (line.contentEquals("<body>")) {
 
 					user = rd.readLine();
 					user = parseLine(user);
@@ -48,6 +48,7 @@ public class Parser {
 					text = parseLine(text);
 					break;
 				}
+			}
 			if (line == null) {
 				user = null;
 				passwd = null;

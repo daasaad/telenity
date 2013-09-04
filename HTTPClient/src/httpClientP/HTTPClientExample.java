@@ -23,6 +23,7 @@ public class HTTPClientExample {
 		data.setPasswd(parser.passwd);
 		data.setMSISDN(parser.msisdn);
 		data.setText(parser.text);
+		data.show();// just to check
 	}
 
 	public static void main(String[] args) throws Exception {
