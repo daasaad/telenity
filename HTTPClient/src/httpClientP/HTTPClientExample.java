@@ -1,34 +1,49 @@
 package httpClientP;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
 
 public class HTTPClientExample {
 
-	static final String MY_URL = "http://localhost:8080/HelloWorldServlet/servlet?user=ssad&passwd=pass123&msisdn=0394034993&text=Message123";
-	public String url = null;
-
-	public HTTPClientExample(String url) {
-		this.url = url;
+	static final String USER = "ssad";
+	static final String PASSWD = "pass123";
+	static final String MSISDN = "123456789012";
+	static final String TEXT = "Buanukkagueeagnab446";
+	private String user;
+	private String passwd;
+	private String msisdn;
+	private String text;
+	
+	
+	
+	public HTTPClientExample(String user, String passwd, String msisdn, String text) {
+		this.user = user;
+		this.passwd = passwd;
+		this.msisdn = msisdn;
+		this.text = text;
 	}
 
-	public void HttpClientExecute() {
+	public ResponseCodes HttpClientExecute() {
+		
+		SmsServletRequest request = new SmsServletRequest();
+		request.setUser(user);
+		request.setPasswd(passwd);
+		request.setMSISDN(msisdn);
+		request.setText(text);
+		
 		SmsServletClient client = new SmsServletClient();
-		HttpGet request = (HttpGet) client.request(url);
-		SmsServletResponser responser = new SmsServletResponser();
-		HttpResponse response = responser.executeResponse(request);
+		HttpResponse response = client.processRequest(request);
 		Parser parser = new Parser(response);
-		SmsServletRequest data = new SmsServletRequest();
-		data.setUser(parser.user);
-		data.setPasswd(parser.passwd);
-		data.setMSISDN(parser.msisdn);
-		data.setText(parser.text);
-		data.show();// just to check
+		
+		System.out.println(parser.user);
+		System.out.println(parser.passwd);
+		System.out.println(parser.msisdn);
+		System.out.println(parser.text);// just to check
+		
+		return parser.returnError();	
 	}
 
 	public static void main(String[] args) throws Exception {
-		HTTPClientExample example = new HTTPClientExample(MY_URL);
-		example.HttpClientExecute();
+		HTTPClientExample example = new HTTPClientExample(USER, PASSWD, MSISDN, TEXT);
+		System.out.println("ErrorCode:" + example.HttpClientExecute().value());// just to check
 	}
-
 }

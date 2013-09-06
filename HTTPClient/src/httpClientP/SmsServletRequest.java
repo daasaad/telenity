@@ -38,11 +38,4 @@ public class SmsServletRequest {
 		return this.text;
 	}
 
-	public void show() {// just to check
-		System.out.println(user);
-		System.out.println(passwd);
-		System.out.println(msisdn);
-		System.out.println(text);
-
-	}
 }

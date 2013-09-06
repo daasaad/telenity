@@ -7,15 +7,36 @@ import java.io.InputStreamReader;
 import org.apache.http.HttpResponse;
 
 public class Parser {
+
 	public String user = null;
 	public String passwd = null;
 	public String msisdn = null;
 	public String text = null;
 
+	public ResponseCodes returnError() {
+
+		boolean invalidMSISDN = false;
+		try {
+			Integer.parseInt(msisdn.substring(0, 9));
+			Integer.parseInt(msisdn.substring(9));
+		} catch (NumberFormatException e) {
+			invalidMSISDN = true;
+			System.out.println("catch" + msisdn);
+		}
+		
+		if (user.isEmpty() || passwd.isEmpty())
+			return ResponseCodes.MISSING_PARAMETER;
+		else if (invalidMSISDN)
+			return ResponseCodes.INVALID_MSISDN;
+		else if (!user.contentEquals("ssad") || !passwd.contentEquals("pass123")) {
+			return ResponseCodes.AUTHENTICATION_FAILED;
+		} else
+			return ResponseCodes.OK;
+	}
+
 	public String parseLine(String line) {
 		int subIndex = line.indexOf('=');
-		return line.substring(subIndex + 2);
-
+		return (String)line.substring(subIndex + 2);
 	}
 
 	public Parser(HttpResponse response) {
@@ -30,31 +51,18 @@ public class Parser {
 			e1.printStackTrace();
 		}
 
-		String line = "";
 		try {
-			while ((line = rd.readLine()) != null) {
-				if (line.contentEquals("<body>")) {
+			user = rd.readLine();
+			user = parseLine(user);
 
-					user = rd.readLine();
-					user = parseLine(user);
+			passwd = rd.readLine();
+			passwd = parseLine(passwd);
 
-					passwd = rd.readLine();
-					passwd = parseLine(passwd);
+			msisdn = rd.readLine();
+			msisdn = parseLine(msisdn);
 
-					msisdn = rd.readLine();
-					msisdn = parseLine(msisdn);
-
-					text = rd.readLine();
-					text = parseLine(text);
-					break;
-				}
-			}
-			if (line == null) {
-				user = null;
-				passwd = null;
-				msisdn = null;
-				text = null;
-			}
+			text = rd.readLine();
+			text = parseLine(text);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
