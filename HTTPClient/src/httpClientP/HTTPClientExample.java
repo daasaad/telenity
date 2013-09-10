@@ -12,10 +12,10 @@ public class HTTPClientExample {
 	private String passwd;
 	private String msisdn;
 	private String text;
+	public Holdable holdable;
 	
-	
-	
-	public HTTPClientExample(String user, String passwd, String msisdn, String text) {
+	public HTTPClientExample(String user, String passwd, String msisdn, String text, Holdable holdable) {
+		this.holdable = holdable;
 		this.user = user;
 		this.passwd = passwd;
 		this.msisdn = msisdn;
@@ -34,16 +34,14 @@ public class HTTPClientExample {
 		HttpResponse response = client.processRequest(request);
 		Parser parser = new Parser(response);
 		
-		System.out.println(parser.user);
-		System.out.println(parser.passwd);
-		System.out.println(parser.msisdn);
-		System.out.println(parser.text);// just to check
+		holdable.get(parser.user, parser.passwd, parser.msisdn, parser.text);
 		
 		return parser.returnError();	
 	}
 
 	public static void main(String[] args) throws Exception {
-		HTTPClientExample example = new HTTPClientExample(USER, PASSWD, MSISDN, TEXT);
-		System.out.println("ErrorCode:" + example.HttpClientExecute().value());// just to check
+		Holdable holdable = new HolderSQL();
+		HTTPClientExample example = new HTTPClientExample(USER, PASSWD, MSISDN, TEXT, holdable);
+		System.out.println("ErrorCode for Response:" + example.HttpClientExecute().value());// just to check
 	}
 }
