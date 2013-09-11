@@ -13,8 +13,9 @@ public class HTTPClientExample {
 	private String msisdn;
 	private String text;
 	public Holdable holdable;
-	
-	public HTTPClientExample(String user, String passwd, String msisdn, String text, Holdable holdable) {
+
+	public HTTPClientExample(String user, String passwd, String msisdn,
+			String text, Holdable holdable) {
 		this.holdable = holdable;
 		this.user = user;
 		this.passwd = passwd;
@@ -23,25 +24,25 @@ public class HTTPClientExample {
 	}
 
 	public ResponseCodes HttpClientExecute() {
-		
-		SmsServletRequest request = new SmsServletRequest();
-		request.setUser(user);
-		request.setPasswd(passwd);
-		request.setMSISDN(msisdn);
-		request.setText(text);
-		
+
 		SmsServletClient client = new SmsServletClient();
-		HttpResponse response = client.processRequest(request);
-		Parser parser = new Parser(response);
-		
-		holdable.get(parser.user, parser.passwd, parser.msisdn, parser.text);
-		
-		return parser.returnError();	
+		HttpResponse response = client.processRequest(user, passwd, msisdn,
+				text);
+		Parser parser = new Parser();
+
+		SmsServlet_Request data = parser.parse(response);
+		ResponseCodes err = parser.returnError();
+		if (err.value() == 0)
+			holdable.get(data);
+
+		return parser.returnError();
 	}
 
 	public static void main(String[] args) throws Exception {
 		Holdable holdable = new HolderSQL();
-		HTTPClientExample example = new HTTPClientExample(USER, PASSWD, MSISDN, TEXT, holdable);
-		System.out.println("ErrorCode for Response:" + example.HttpClientExecute().value());// just to check
+		HTTPClientExample example = new HTTPClientExample(USER, PASSWD, MSISDN,
+				TEXT, holdable);
+		System.out.println("ErrorCode for Response:"
+				+ example.HttpClientExecute().value());// just to check
 	}
 }

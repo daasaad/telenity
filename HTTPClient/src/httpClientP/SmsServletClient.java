@@ -9,12 +9,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 public class SmsServletClient extends DefaultHttpClient {
 
-	public HttpResponse processRequest(SmsServletRequest request) {
-		
+	public HttpResponse processRequest(String user, String passwd, String msisdn, String text) {
+
 		String url = "http://localhost:8080/HelloWorldServlet/servlet?"
-				+ "user=" + request.getUser() + "&passwd="
-				+ request.getPasswd() + "&msisdn=" + request.getMSISDN()
-				+ "&text=" + request.getText();
+				+ "user=" + user + "&passwd=" + passwd + "&msisdn=" + msisdn
+				+ "&text=" + text;
 		HttpGet httpGet = new HttpGet(url);
 		HttpResponse response = null;
 		try {

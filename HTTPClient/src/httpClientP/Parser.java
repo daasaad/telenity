@@ -3,15 +3,17 @@ package httpClientP;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import org.apache.http.HttpResponse;
 
 public class Parser {
 
-	public String user = null;
-	public String passwd = null;
-	public String msisdn = null;
-	public String text = null;
+	private String user = null;
+	private String passwd = null;
+	private String msisdn = null;
+	private String text = null;
 
 	public ResponseCodes returnError() {
 
@@ -23,23 +25,24 @@ public class Parser {
 			invalidMSISDN = true;
 			System.out.println("catch" + msisdn);
 		}
-		
+
 		if (user.isEmpty() || passwd.isEmpty())
 			return ResponseCodes.MISSING_PARAMETER;
 		else if (invalidMSISDN)
 			return ResponseCodes.INVALID_MSISDN;
-		else if (!user.contentEquals("ssad") || !passwd.contentEquals("pass123")) {
+		else if (!user.contentEquals("ssad")
+				|| !passwd.contentEquals("pass123")) {
 			return ResponseCodes.AUTHENTICATION_FAILED;
 		} else
 			return ResponseCodes.OK;
 	}
 
-	public String parseLine(String line) {
+	private String parseLine(String line) {
 		int subIndex = line.indexOf('=');
-		return (String)line.substring(subIndex + 2);
+		return (String) line.substring(subIndex + 2);
 	}
 
-	public Parser(HttpResponse response) {
+	public SmsServlet_Request parse(HttpResponse response) {
 
 		BufferedReader rd = null;
 		try {
@@ -64,8 +67,15 @@ public class Parser {
 			text = rd.readLine();
 			text = parseLine(text);
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
+
+		SmsServlet_Request data = new SmsServlet_Request();
+		data.setUser(user);
+		data.setPasswd(passwd);
+		data.setMsisdn(msisdn);
+		data.setText(text);
+		data.setTimestamp(new Timestamp(new Date().getTime()));
+		return data;
 	}
 
 }
